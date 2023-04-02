@@ -1,0 +1,6 @@
+azurerm_resource_group_name = "1-73be3bb6-playground-sandbox"
+azurerm_location            = "eastus"
+project_name_prefix         = "distrans"
+agent_vm_name               = "distransPipelineAgent"
+agent_vm_hostname           = "distransAgent"
+agent_vm_username           = "azureuser"
