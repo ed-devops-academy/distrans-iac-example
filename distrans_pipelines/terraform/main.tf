@@ -39,6 +39,18 @@ resource "azurerm_network_security_group" "agent_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  security_rule {
+    name                       = "HTTPS"
+    priority                   = 1002
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "443"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 # Create network interface
@@ -73,7 +85,7 @@ resource "random_id" "random_id" {
 
 # Create storage account for boot diagnostics
 resource "azurerm_storage_account" "agent_storage_account" {
-  name                     = "${var.project_name_prefix}AgentStorage${random_id.random_id.hex}"
+  name                     = "${var.project_name_prefix}agentstorage"
   location                 = var.azurerm_location
   resource_group_name      = var.azurerm_resource_group_name
   account_tier             = "Standard"
