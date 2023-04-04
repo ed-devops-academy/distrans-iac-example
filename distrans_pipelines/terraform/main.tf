@@ -113,7 +113,7 @@ resource "azurerm_linux_virtual_machine" "agent_vm" {
 
   admin_ssh_key {
     username   = "${var.agent_vm_username}"
-    public_key = tls_private_key.example_ssh.public_key_openssh
+    public_key = tls_private_key.agent_vm_ssh.public_key_openssh
   }
 
   boot_diagnostics {
