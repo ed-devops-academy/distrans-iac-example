@@ -46,8 +46,8 @@ resource "azurerm_network_security_group" "agent_nsg" {
     direction                  = "Outbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_port_range          = "443"
-    destination_port_range     = "*"
+    source_port_range          = "*"
+    destination_port_range     = "443"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -119,16 +119,25 @@ resource "azurerm_linux_virtual_machine" "agent_vm" {
     version   = "latest"
   }
 
-  computer_name                   = "${var.agent_vm_hostname}"
+  computer_name                   = var.agent_vm_hostname
   admin_username                  = "azureuser"
   disable_password_authentication = true
 
   admin_ssh_key {
-    username   = "${var.agent_vm_username}"
+    username   = var.agent_vm_username
     public_key = tls_private_key.agent_vm_ssh.public_key_openssh
   }
 
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.agent_storage_account.primary_blob_endpoint
   }
+
+}
+
+resource "azurerm_container_registry" "acr" {
+  name                = "${var.project_name_prefix}acr"
+  resource_group_name = var.azurerm_resource_group_name
+  location            = var.azurerm_location
+  sku                 = "Basic"
+  admin_enabled       = true
 }
