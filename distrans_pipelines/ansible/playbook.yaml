@@ -1,7 +1,12 @@
 - hosts: all
   become: true
   vars:
-    ubuntu_release: focal
+    common:
+      ubuntu_release: focal
+      agent_username: azureuser
+    agent:
+      download_url: https://vstsagentpackage.azureedge.net/agent/3.218.0/vsts-agent-linux-x64-3.218.0.tar.gz
+      agent_dir_name: distransAgent
 
   tasks:
     - name: Install aptitude
@@ -30,7 +35,7 @@
 
     - name: Add Docker Repository
       apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu "{{ ubuntu_release }}" stable
+        repo: deb https://download.docker.com/linux/ubuntu "{{ common.ubuntu_release }}" stable
         state: present
 
     - name: Update apt and install docker-ce
@@ -38,3 +43,12 @@
         name: docker-ce
         state: latest
         update_cache: true
+
+    - name: Create agent directory {{ agent.agent_dir_name }} on user's {{ common.agent_username }} home directory
+      file: state=directory path=/home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+
+    - name: Download and unarchive Azure Pipeline Agent
+      unarchive:
+        src: "{{ agent.download_url }}"
+        dest: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+        remote_src: yes
