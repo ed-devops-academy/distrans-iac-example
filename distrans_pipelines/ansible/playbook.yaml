@@ -4,6 +4,9 @@
     - name: azure_pipeline_access_token
       prompt: Enter azure pipeline personal access token
       private: true
+    - name: reconfigure_agent
+      prompt: Reconfigure and re-run agent service?
+      default: false
   vars:
     common:
       ubuntu_release: focal
@@ -52,6 +55,11 @@
         state: latest
         update_cache: true
 
+    - name: Add {{ common.agent_username }} to docker group
+      become: true
+      shell:
+        cmd: usermod -aG docker {{ common.agent_username }}
+
     - name: Create agent directory {{ agent.agent_dir_name }} on user's {{ common.agent_username }} home directory
       file: state=directory path=/home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
 
@@ -68,6 +76,31 @@
         recurse: yes
         owner: "{{ common.agent_username }}"
         group: "{{ common.agent_username }}"
+
+    - name: Stop azure agent service
+      become: true
+      when: reconfigure_agent | bool
+      shell:
+        cmd: ./svc.sh stop
+        chdir: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+
+    - name: Stop azure agent service
+      become: true
+      when: reconfigure_agent | bool
+      shell:
+        cmd: ./svc.sh uninstall
+        chdir: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+
+    - name: Remove Azure agent config
+      become: false
+      become_user: "{{ common.agent_username }}"
+      when: reconfigure_agent | bool
+      expect:
+        command: ./config.sh remove
+        chdir: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+        responses:
+          '(.*)Enter authentication type(.*)': "PAT"
+          '(.*)Enter personal access token(.*)': "{{ azure_pipeline_access_token }}"
 
     - name: Config Azure agent
       become: false
