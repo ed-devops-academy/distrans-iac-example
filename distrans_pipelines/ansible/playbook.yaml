@@ -1,12 +1,20 @@
 - hosts: all
   become: true
+  vars_prompt:
+    - name: azure_pipeline_access_token
+      prompt: Enter azure pipeline personal access token
+      private: true
   vars:
     common:
       ubuntu_release: focal
       agent_username: azureuser
     agent:
+      name: distransAgent
+      work_folder: _work
       download_url: https://vstsagentpackage.azureedge.net/agent/3.218.0/vsts-agent-linux-x64-3.218.0.tar.gz
       agent_dir_name: distransAgent
+      pool:
+        server_url: https://dev.azure.com/musalaDevOpsAcademy
 
   tasks:
     - name: Install aptitude
@@ -52,3 +60,40 @@
         src: "{{ agent.download_url }}"
         dest: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
         remote_src: yes
+
+    - name: Recursively change ownership of agent scripts directory
+      file:
+        path: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+        state: directory
+        recurse: yes
+        owner: "{{ common.agent_username }}"
+        group: "{{ common.agent_username }}"
+
+    - name: Config Azure agent
+      become: false
+      become_user: "{{ common.agent_username }}"
+      expect:
+        command: ./config.sh
+        chdir: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+        responses:
+          '(.*)press enter for N(.*)': "Y"
+          '(.*)Enter server URL(.*)': "{{ agent.pool.server_url }}"
+          '(.*)press enter for PAT(.*)': "PAT"
+          '(.*)Enter personal access token(.*)': "{{ azure_pipeline_access_token }}"
+          '(.*)Enter agent pool(.*)': "default"
+          '(.*)Enter agent name(.*)': "{{ agent.name }}"
+          '(.*)Enter work folder(.*)': "{{ agent.work_folder }}"
+
+    - name: Install azure agent service
+      become: true
+      shell:
+        cmd: ./svc.sh install {{ common.agent_username }}
+        chdir: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+
+    - name: Run azure agent service
+      become: true
+      shell:
+        cmd: ./svc.sh start
+        chdir: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
+          
+
