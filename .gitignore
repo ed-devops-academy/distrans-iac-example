@@ -23,3 +23,7 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# custom files 
+*id_rsa
+*plan
