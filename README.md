@@ -21,7 +21,7 @@ to apply the change from the generated plan file and create the resources
 |Variable Name|Description|
 |-------------|-----------|
 |azurerm_resource_group_name| To specify the Azure Resource group where the resource are gonna be created|
-|azurerm_location| The Azure's location where the resources are goona be created|
+|azurerm_location| The Azure's location where the resources are gonna be created|
 
 ### **Important output variables for terraform**
 |Variable Name|Description|
@@ -29,7 +29,7 @@ to apply the change from the generated plan file and create the resources
 |agent_admin_username| Admin's username of the created VM|
 |agent_public_ip_address| The public IP of the created VM|
 |tls_private_key| TLS private key from VM to use to allow connection to the VM using secure shell|
-|acr_admin_password| The password of the Azure Container Regustry|
+|acr_admin_password| The password of the Azure Container Registry|
 
 **Notes** 
 * Use command `terraform output -raw tls_private_key > id_rsa` to save a file with the private key to connect through ssh using `ssh -i id_rsa mv_user@agent_public_ip_address` (you must change the **id_rsa** file permission to 600 in order to work)
