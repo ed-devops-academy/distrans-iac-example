@@ -26,7 +26,8 @@ to apply the change from the generated plan file and create the resources
 ### **Important output variables for terraform**
 |Variable Name|Description|
 |-------------|-----------|
-|agent_public_ip_address| The public IP of the VM created|
+|agent_admin_username| Admin's username of the created VM|
+|agent_public_ip_address| The public IP of the created VM|
 |tls_private_key| TLS private key from VM to use to allow connection to the VM using secure shell|
 |acr_admin_password| The password of the Azure Container Regustry|
 
