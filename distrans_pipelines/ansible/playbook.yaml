@@ -69,6 +69,9 @@
         dest: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
         remote_src: yes
 
+    - name: Create agent work directory {{ agent.agent_dir_name }}/{{ agent.work_folder }} on user's {{ common.agent_username }} home directory
+      file: state=directory path=/home/{{ common.agent_username }}/{{ agent.agent_dir_name }}/{{ agent.work_folder }}
+
     - name: Recursively change ownership of agent scripts directory
       file:
         path: /home/{{ common.agent_username }}/{{ agent.agent_dir_name }}

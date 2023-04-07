@@ -5,7 +5,7 @@ The folder *distrans_pipelines* contains **Terraform** and **Ansible** files to 
 
 The terraform project on *distrans_pipelines/terraform* creates a Azure VM with a public IP and network rules to allow SSH and HTTPS connections. Also creates a Azure Container Registry to store the docker images created on the pipeline
 
-### **Using terraform**
+### **Using Terraform**
 
 First log in in your azure account using a tool like azure-cli and the run command from *distrans_pipelines/terraform* directory with your custom input values to generate a terraform plan:
 
@@ -37,7 +37,7 @@ to apply the change from the generated plan file and create the resources
 * Use command `terraform output -raw tls_private_key > id_rsa` to save a file with the private key to connect through ssh using `ssh -i id_rsa mv_user@agent_public_ip_address` (you must change the **id_rsa** file permission to 600 in order to work)
 * Use command `terraform output -raw acr_admin_password` to get Azure Container Registry password
 
-## **Using ansible**
+## **Using Ansible**
 
 On the directory *distrans_pipelines/ansible* run 
 
