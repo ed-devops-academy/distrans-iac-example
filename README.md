@@ -5,12 +5,6 @@ The folder *distrans_pipelines* contains **Terraform** and **Ansible** files to 
 
 The terraform project on *distrans_pipelines/terraform* creates a Azure VM with a public IP and network rules to allow SSH and HTTPS connections. Also creates a Azure Container Registry to store the docker images created on the pipeline
 
-### **Important input variables for terraform**
-|Variable Name|Description|
-|-------------|-----------|
-|azurerm_resource_group_name| To specify the Azure Resource group where the resource are gonna be created|
-|azurerm_location| The Azure's location where the resources are goona be created|
-
 ### **Using terraform**
 
 First log in in your azure account using a tool like azure-cli and the run command from *distrans_pipelines/terraform* directory with your custom input values to generate a terraform plan:
@@ -22,6 +16,12 @@ then run:
 `terraform apply --auto-approve plan`
 
 to apply the change from the generated plan file and create the resources
+
+### **Important input variables for terraform**
+|Variable Name|Description|
+|-------------|-----------|
+|azurerm_resource_group_name| To specify the Azure Resource group where the resource are gonna be created|
+|azurerm_location| The Azure's location where the resources are goona be created|
 
 ### **Important output variables for terraform**
 |Variable Name|Description|
