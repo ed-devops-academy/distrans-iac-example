@@ -1,6 +1,6 @@
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                = "${var.project_name_prefix}-aks"
-  location           = var.azurerm_location
+  location            = var.azurerm_location
   resource_group_name = var.azurerm_resource_group_name
   dns_prefix          = var.project_name_prefix
 
