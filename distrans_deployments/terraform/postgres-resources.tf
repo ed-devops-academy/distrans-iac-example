@@ -24,11 +24,11 @@ resource "azurerm_network_security_group" "postgres_nsg" {
 }
 
 resource "azurerm_subnet" "postgres_subnet" {
-  name                = "${var.project_name_prefix}-pg-subnet"
-  location            = var.azurerm_location
-  resource_group_name = var.azurerm_resource_group_name
-  address_prefixes    = ["10.0.2.0/24"]
-  service_endpoints   = ["Microsoft.Storage"]
+  name                 = "${var.project_name_prefix}-pg-subnet"
+  resource_group_name  = var.azurerm_resource_group_name
+  virtual_network_name = azurerm_virtual_network.postgres_vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+  service_endpoints    = ["Microsoft.Storage"]
 
   delegation {
     name = "fs"
@@ -70,8 +70,8 @@ resource "azurerm_postgresql_flexible_server" "postgres_server" {
   version                = "13"
   delegated_subnet_id    = azurerm_subnet.postgres_subnet.id
   private_dns_zone_id    = azurerm_private_dns_zone.postgres_dns_zone.id
-  administrator_login    = "adminTerraform"
-  administrator_password = random_password.pass.result
+  administrator_login    = var.postgres_server_administrator_login
+  administrator_password = var.postgres_server_administrator_password
   zone                   = "1"
   storage_mb             = 32768
   sku_name               = "GP_Standard_D2s_v3"
