@@ -27,3 +27,4 @@ override.tf.json
 # custom files 
 *id_rsa
 *plan
+*kube_config

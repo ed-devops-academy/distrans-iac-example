@@ -49,14 +49,14 @@ resource "azurerm_subnet_network_security_group_association" "postgres_nsg_snet_
 }
 
 resource "azurerm_private_dns_zone" "postgres_dns_zone" {
-  name                = "${var.project_name_prefix}-pdz.postgres.database.azure.com"
+  name                = "${var.project_name_prefix}dns.postgres.database.azure.com"
   resource_group_name = var.azurerm_resource_group_name
 
   depends_on = [azurerm_subnet_network_security_group_association.postgres_nsg_snet_link]
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "postgres_dns_vnet_link" {
-  name                  = "${var.project_name_prefix}-pdzvnetlink.com"
+  name                  = "${var.project_name_prefix}pglink"
   private_dns_zone_name = azurerm_private_dns_zone.postgres_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.postgres_vnet.id
   resource_group_name   = var.azurerm_resource_group_name
@@ -64,7 +64,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "postgres_dns_vnet_link
 
 
 resource "azurerm_postgresql_flexible_server" "postgres_server" {
-  name                   = "${var.project_name_prefix}-pg-server"
+  name                   = "${var.project_name_prefix}pgserver"
   location               = var.azurerm_location
   resource_group_name    = var.azurerm_resource_group_name
   version                = "13"
