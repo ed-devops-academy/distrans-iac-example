@@ -17,7 +17,7 @@ resource "azurerm_network_security_group" "postgres_nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges     = [5432, 6432]
+    destination_port_ranges    = [5432, 6432]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

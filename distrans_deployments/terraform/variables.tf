@@ -18,7 +18,7 @@ variable "azurerm_location" {
 
 variable "cluster_nodes_quantity" {
   type        = number
-  default     = 6
+  default     = 3
   description = "Quantity of nodes for the Azure Kubernete Cluster."
 }
 
