@@ -11,13 +11,13 @@ resource "azurerm_network_security_group" "postgres_nsg" {
   resource_group_name = var.azurerm_resource_group_name
 
   security_rule {
-    name                       = "AllowTCPIn"
+    name                       = "AllowPostgresPortIn"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "*"
+    destination_port_ranges     = [5432, 6432]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
