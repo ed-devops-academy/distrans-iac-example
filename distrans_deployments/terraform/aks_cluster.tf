@@ -5,6 +5,13 @@ resource "azurerm_subnet" "aks_subnet" {
   address_prefixes     = ["10.0.3.0/24"]
 }
 
+resource "azurerm_container_registry" "acr" {
+  name                = "${var.project_name_prefix}acr"
+  resource_group_name = var.azurerm_resource_group_name
+  location            = var.azurerm_location
+  sku                 = "Basic"
+  admin_enabled       = true
+}
 
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                = "${var.project_name_prefix}-aks"

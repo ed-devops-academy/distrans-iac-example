@@ -20,3 +20,9 @@ output "postgresql_flexible_server_admin_password" {
   sensitive = true
   value     = azurerm_postgresql_flexible_server.postgres_server.administrator_password
 }
+
+output "acr_admin_password" {
+  value       = azurerm_container_registry.acr.admin_password
+  description = "Azure Container Register admin's password"
+  sensitive   = true
+}
