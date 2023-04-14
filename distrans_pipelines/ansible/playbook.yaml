@@ -63,6 +63,22 @@
     - name: Create agent directory {{ agent.agent_dir_name }} on user's {{ common.agent_username }} home directory
       file: state=directory path=/home/{{ common.agent_username }}/{{ agent.agent_dir_name }}
 
+    - name: Add Google Cloud GPG public signing key for kubectl packgage
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Kubernetes Repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-"{{ common.ubuntu_release }}" main
+        state: present
+
+    - name: Update apt and install kubectl
+      apt:
+        name: kubectl
+        state: latest
+        update_cache: true
+
     - name: Download and unarchive Azure Pipeline Agent
       unarchive:
         src: "{{ agent.download_url }}"
