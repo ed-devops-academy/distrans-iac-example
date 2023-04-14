@@ -18,6 +18,8 @@
       agent_dir_name: distransAgent
       pool:
         server_url: https://dev.azure.com/musalaDevOpsAcademy
+    helm:
+      binary_url: https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
 
   tasks:
     - name: Install aptitude
@@ -65,12 +67,12 @@
 
     - name: Add Google Cloud GPG public signing key for kubectl packgage
       apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
 
     - name: Add Kubernetes Repository
       apt_repository:
-        repo: deb https://apt.kubernetes.io/ kubernetes-"{{ common.ubuntu_release }}" main
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
         state: present
 
     - name: Update apt and install kubectl
@@ -78,6 +80,15 @@
         name: kubectl
         state: latest
         update_cache: true
+
+    - name: Download and unarchive Helm binary
+      unarchive:
+        src: "{{ helm.binary_url }}"
+        dest: /home/{{ common.agent_username }}
+        remote_src: yes
+
+    - name: Move helm executable bin folder
+      command: mv /home/{{ common.agent_username }}/linux-amd64/helm /usr/bin
 
     - name: Download and unarchive Azure Pipeline Agent
       unarchive:
