@@ -13,6 +13,14 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled       = true
 }
 
+resource "azurerm_public_ip" "aks_nginx_ingress_public_ip" {
+  name                = "${var.project_name_prefix}AKSPublicIP"
+  location            = var.azurerm_location
+  resource_group_name = var.azurerm_resource_group_name
+  allocation_method   = "Static"
+  domain_name_label   = var.project_name_prefix
+}
+
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                = "${var.project_name_prefix}-aks"
   location            = var.azurerm_location
@@ -20,10 +28,10 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   dns_prefix          = var.project_name_prefix
 
   network_profile {
-    network_plugin = "azure"
-    network_policy = "azure"
-    service_cidr = "10.0.4.0/24"
-    dns_service_ip = "10.0.4.10"
+    network_plugin     = "azure"
+    network_policy     = "azure"
+    service_cidr       = "10.0.4.0/24"
+    dns_service_ip     = "10.0.4.10"
     docker_bridge_cidr = "172.17.0.1/16"
   }
 

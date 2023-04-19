@@ -34,4 +34,17 @@ variable "postgres_server_administrator_password" {
   description = "Password of the administrator of the postgres server."
 }
 
+variable "aks_namespace" {
+  type        = string
+  default     = "distrans"
+  description = "Default AKS namespace where create resources."
+}
+
+variable "organization_email" {
+  type        = string
+  default     = "eduardo.miguel@musala.com"
+  description = "Organization email to use AKS ClusterIssuer on tls setup."
+}
+
+
 
