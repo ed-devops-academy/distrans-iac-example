@@ -19,6 +19,7 @@ resource "azurerm_public_ip" "aks_nginx_ingress_public_ip" {
   resource_group_name = var.azurerm_resource_group_name
   allocation_method   = "Static"
   domain_name_label   = var.project_name_prefix
+  sku = "Standard"
 }
 
 resource "azurerm_kubernetes_cluster" "aks_cluster" {

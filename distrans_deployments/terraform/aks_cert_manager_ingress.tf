@@ -18,6 +18,7 @@ resource "helm_release" "helm_nginx" {
   chart      = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"
   namespace  = var.aks_namespace
+  version    = "4.1.3"
 
   set {
     name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-dns-label-name"
@@ -28,6 +29,30 @@ resource "helm_release" "helm_nginx" {
   set {
     name  = "controller.service.loadBalancerIP"
     value = azurerm_public_ip.aks_nginx_ingress_public_ip.ip_address
+  }
+
+  set {
+    name  = "controller.nodeSelector.kubernetes\\.io/os"
+    value = "linux"
+    type  = "string"
+  }
+
+  set {
+    name  = "controller.admissionWebhooks.patch.nodeSelector.kubernetes\\.io/os"
+    value = "linux"
+    type  = "string"
+  }
+
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-health-probe-request-path"
+    value = "/healthz"
+    type  = "string"
+  }
+
+  set {
+    name  = "defaultBackend.nodeSelector.kubernetes\\.io/os"
+    value = "linux"
+    type  = "string"
   }
 
   depends_on = [
@@ -41,7 +66,7 @@ resource "helm_release" "cert_manager" {
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
   namespace  = var.aks_namespace
-  version    = "v1.11.1"
+  version    = "v1.8.0"
 
   set {
     name  = "installCRDs"
