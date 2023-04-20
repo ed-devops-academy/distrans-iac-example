@@ -98,6 +98,7 @@ resource "kubectl_manifest" "aks_manifests" {
   yaml_body = each.value
 
   depends_on = [
-    kubectl_manifest.aks_namespace_manifest
+    kubectl_manifest.aks_namespace_manifest,
+    helm_release.cert_manager
   ]
 }
