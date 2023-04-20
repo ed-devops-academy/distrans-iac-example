@@ -55,6 +55,11 @@ resource "helm_release" "helm_nginx" {
     type  = "string"
   }
 
+  set {
+    name  = "controller.service.externalTrafficPolicy"
+    value = "Local"
+  }
+
   depends_on = [
     kubectl_manifest.aks_namespace_manifest
   ]
