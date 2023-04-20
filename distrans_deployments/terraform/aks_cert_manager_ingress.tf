@@ -27,11 +27,6 @@ resource "helm_release" "helm_nginx" {
   }
 
   set {
-    name  = "controller.service.loadBalancerIP"
-    value = azurerm_public_ip.aks_nginx_ingress_public_ip.ip_address
-  }
-
-  set {
     name  = "controller.nodeSelector.kubernetes\\.io/os"
     value = "linux"
     type  = "string"
