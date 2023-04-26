@@ -26,3 +26,12 @@ output "acr_admin_password" {
   description = "Azure Container Register admin's password"
   sensitive   = true
 }
+
+output "app_vm_public_ip_address" {
+  value = azurerm_windows_virtual_machine.app_vm.public_ip_address
+}
+
+output "app_vm_admin_password" {
+  sensitive = true
+  value     = azurerm_windows_virtual_machine.app_vm.admin_password
+}

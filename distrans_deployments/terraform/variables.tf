@@ -4,6 +4,12 @@ variable "project_name_prefix" {
   description = "Name of the project to use as prefix for resources."
 }
 
+variable "client_application_name_prefix" {
+  type        = string
+  default     = "superCheapApp"
+  description = "Name of the project to use as prefix for resources."
+}
+
 variable "azurerm_resource_group_name" {
   type        = string
   default     = "1-b13ea3a5-playground-sandbox"
@@ -44,6 +50,18 @@ variable "organization_email" {
   type        = string
   default     = "eduardo.miguel@musala.com"
   description = "Organization email to use AKS ClusterIssuer on tls setup."
+}
+
+variable "app_vm_hostname" {
+  type        = string
+  default     = "distransAgent"
+  description = "Hostname of the virtual machine agent resource."
+}
+
+variable "app_vm_username" {
+  type        = string
+  default     = "azureuser"
+  description = "Username of the virtual machine agent resource."
 }
 
 
