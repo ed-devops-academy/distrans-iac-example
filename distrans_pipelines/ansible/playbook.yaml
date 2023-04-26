@@ -21,7 +21,7 @@
     helm:
       binary_url: https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
     dotnet:
-      version: "6"
+      version: "2.1"
 
   tasks:
     - name: Install aptitude
@@ -83,11 +83,16 @@
         state: latest
         update_cache: true
 
+    - name: Install Microsoft .NET package repository
+      apt:
+        deb: https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+
     - name: Update apt and install .Net SDK and Runtime
       apt:
         pkg:
-          - dotnet{{ dotnet.version }}
-          - aspnetcore-runtime-{{ dotnet.version }}.0
+          - dotnet-sdk-{{ dotnet.version }}
+          - dotnet-runtime-{{ dotnet.version }}
+          - aspnetcore-runtime-{{ dotnet.version }}
         state: latest
         update_cache: true
 
