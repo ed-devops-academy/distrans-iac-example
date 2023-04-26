@@ -107,11 +107,11 @@ resource "azurerm_windows_virtual_machine" "app_vm" {
   name                  = "${var.client_application_name_prefix}VM"
   location              = var.azurerm_location
   resource_group_name   = var.azurerm_resource_group_name
-  network_interface_ids = [azurerm_network_interface.agent_nic.id]
+  network_interface_ids = [azurerm_network_interface.app_vm_nic.id]
   size                  = "Standard_DS1_v2"
 
   computer_name                   = var.app_vm_hostname
-  admin_username                  = var.agent_vm_username
+  admin_username                  = var.app_vm_username
   admin_password        = random_password.password.result
 
   os_disk {
@@ -123,13 +123,13 @@ resource "azurerm_windows_virtual_machine" "app_vm" {
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2022-datacenter-azure-edition"
+    sku       = "2019-Datacenter"
     version   = "latest"
   }
 
 
   boot_diagnostics {
-    storage_account_uri = azurerm_storage_account.my_storage_account.primary_blob_endpoint
+    storage_account_uri = azurerm_storage_account.app_vm_storage_account.primary_blob_endpoint
   }
 
 }

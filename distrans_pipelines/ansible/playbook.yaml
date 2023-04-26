@@ -20,8 +20,8 @@
         server_url: https://dev.azure.com/musalaDevOpsAcademy
     helm:
       binary_url: https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
-    donet:
-      version: "6.0"
+    dotnet:
+      version: "6"
 
   tasks:
     - name: Install aptitude
@@ -86,9 +86,8 @@
     - name: Update apt and install .Net SDK and Runtime
       apt:
         pkg:
-          - dotnet-sdk-{{ donet.version }}
-          - aspnetcore-runtime-{{ donet.version }}
-        name: kubectl
+          - dotnet{{ dotnet.version }}
+          - aspnetcore-runtime-{{ dotnet.version }}.0
         state: latest
         update_cache: true
 
