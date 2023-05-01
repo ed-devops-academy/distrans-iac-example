@@ -21,7 +21,7 @@
     helm:
       binary_url: https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
     dotnet:
-      version: "2.1"
+      version: "5.0"
 
   tasks:
     - name: Install aptitude

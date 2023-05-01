@@ -28,3 +28,5 @@ override.tf.json
 *id_rsa
 *plan
 *kube_config
+
+download_plugins/

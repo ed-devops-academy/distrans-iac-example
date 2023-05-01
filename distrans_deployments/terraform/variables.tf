@@ -54,7 +54,7 @@ variable "organization_email" {
 
 variable "app_vm_hostname" {
   type        = string
-  default     = "distransAgent"
+  default     = "superCheapApp"
   description = "Hostname of the virtual machine agent resource."
 }
 
@@ -62,6 +62,12 @@ variable "app_vm_username" {
   type        = string
   default     = "azureuser"
   description = "Username of the virtual machine agent resource."
+}
+
+variable "azure_repo_pat" {
+  type        = string
+  default     = "IntroduceRepoPATPlease"
+  description = "Azure DevOps Repo PAT for vm app agent configuration."
 }
 
 

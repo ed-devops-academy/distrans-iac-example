@@ -33,7 +33,7 @@ resource "azurerm_network_security_group" "app_vm_nsg" {
     priority                   = 1000
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "*"
+    protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
     source_address_prefix      = "*"
@@ -85,9 +85,19 @@ resource "azurerm_network_interface_security_group_association" "app_vm_sg_nic_c
   network_security_group_id = azurerm_network_security_group.app_vm_nsg.id
 }
 
+# Generate random text for a unique storage account name
+resource "random_id" "random_id" {
+  keepers = {
+    # Generate a new ID only when a new resource group is defined
+    resource_group = var.azurerm_resource_group_name
+  }
+
+  byte_length = 8
+}
+
 # Create storage account for boot diagnostics
 resource "azurerm_storage_account" "app_vm_storage_account" {
-  name                     = "${lower(var.client_application_name_prefix)}vmstorage"
+  name                     = "${random_id.random_id.hex}appvm"
   location                 = var.azurerm_location
   resource_group_name      = var.azurerm_resource_group_name
   account_tier             = "Standard"
@@ -110,9 +120,9 @@ resource "azurerm_windows_virtual_machine" "app_vm" {
   network_interface_ids = [azurerm_network_interface.app_vm_nic.id]
   size                  = "Standard_DS1_v2"
 
-  computer_name                   = var.app_vm_hostname
-  admin_username                  = var.app_vm_username
-  admin_password        = random_password.password.result
+  computer_name  = var.app_vm_hostname
+  admin_username = var.app_vm_username
+  admin_password = random_password.password.result
 
   os_disk {
     name                 = "myOsDisk"
@@ -131,7 +141,6 @@ resource "azurerm_windows_virtual_machine" "app_vm" {
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.app_vm_storage_account.primary_blob_endpoint
   }
-
 }
 
 resource "random_pet" "prefix" {
@@ -139,9 +148,15 @@ resource "random_pet" "prefix" {
   length = 1
 }
 
-# Install IIS web server to the virtual machine
-resource "azurerm_virtual_machine_extension" "app_vm_web_server_install" {
-  name                       = "${random_pet.prefix.id}-wsi"
+data "template_file" "install_agent" {
+  template = file("install_agent.ps1")
+  vars = {
+    RepoPAT = var.azure_repo_pat
+  }
+}
+
+resource "azurerm_virtual_machine_extension" "app_vm_web_agent_install" {
+  name                       = "${random_pet.prefix.id}-ag-iis-wsi"
   virtual_machine_id         = azurerm_windows_virtual_machine.app_vm.id
   publisher                  = "Microsoft.Compute"
   type                       = "CustomScriptExtension"
@@ -149,8 +164,9 @@ resource "azurerm_virtual_machine_extension" "app_vm_web_server_install" {
   auto_upgrade_minor_version = true
 
   settings = <<SETTINGS
-    {
-      "commandToExecute": "powershell -ExecutionPolicy Unrestricted Install-WindowsFeature -Name Web-Server -IncludeAllSubFeature -IncludeManagementTools"
-    }
+  {    
+    "commandToExecute": "powershell -command \"[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64encode(data.template_file.install_agent.rendered)}')) | Out-File -filepath install_agent.ps1\" && powershell -ExecutionPolicy Unrestricted -File install_agent.ps1 -RepoPAT ${var.azure_repo_pat}}" 
+  }
+  
   SETTINGS
 }
