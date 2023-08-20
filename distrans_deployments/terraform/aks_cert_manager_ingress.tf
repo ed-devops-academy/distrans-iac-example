@@ -1,4 +1,4 @@
-# loading k8s namespace manifests
+# loading k8s namespaces manifests
 data "kubectl_path_documents" "namespace_manifest" {
   pattern = "./k8s_namespace_manifest/*.yaml"
   vars = {

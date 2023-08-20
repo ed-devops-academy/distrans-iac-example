@@ -3,3 +3,4 @@ azurerm_location            = "eastus"
 project_name_prefix         = "distrans"
 cluster_nodes_quantity      = 2
 aks_namespace               = "distrans"
+aks_argocd_namespace        = "argocd"

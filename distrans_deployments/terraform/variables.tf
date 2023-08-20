@@ -46,6 +46,12 @@ variable "aks_namespace" {
   description = "Default AKS namespace where create resources."
 }
 
+variable "aks_argocd_namespace" {
+  type        = string
+  default     = "argocd"
+  description = "Default AKS namespace for ArgoCD resources."
+}
+
 variable "organization_email" {
   type        = string
   default     = "eduardo.miguel@musala.com"
