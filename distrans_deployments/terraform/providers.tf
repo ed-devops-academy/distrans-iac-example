@@ -8,7 +8,7 @@ terraform {
     }
 
     template = {
-      source = "hashicorp/template"
+      source  = "hashicorp/template"
       version = "2.2.0"
     }
 
@@ -31,12 +31,25 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.9.0"
     }
+
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.0.0"
+    }
   }
 }
 
 provider "azurerm" {
   features {}
   skip_provider_registration = true
+}
+
+# Initialize kubernetes
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks_cluster.kube_config.0.host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks_cluster.kube_config.0.client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks_cluster.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks_cluster.kube_config.0.cluster_ca_certificate)
 }
 
 # Initialize Helm

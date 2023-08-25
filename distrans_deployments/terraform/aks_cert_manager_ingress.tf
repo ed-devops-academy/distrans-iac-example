@@ -3,7 +3,6 @@ data "kubectl_path_documents" "namespace_manifest" {
   pattern = "./k8s_namespace_manifest/*.yaml"
   vars = {
     aks_namespace        = var.aks_namespace,
-    aks_argocd_namespace = var.aks_argocd_namespace
   }
 }
 
