@@ -52,6 +52,12 @@ variable "aks_argocd_namespace" {
   description = "Default AKS namespace for ArgoCD resources."
 }
 
+variable "aks_prometheus_namespace" {
+  type        = string
+  default     = "prometheus"
+  description = "Default AKS namespace for Prometheus/Grafana resources."
+}
+
 variable "organization_email" {
   type        = string
   default     = "eduardo.miguel@musala.com"

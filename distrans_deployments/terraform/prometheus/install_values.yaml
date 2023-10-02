@@ -1,0 +1,6 @@
+podSecurityPolicy:
+  enabled: true
+
+server:
+  persistentVolume:
+    enabled: true
