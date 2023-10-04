@@ -6,7 +6,7 @@ resource "kubernetes_namespace" "prometheus_namespace" {
 
 
 resource "helm_release" "prometheus" {
-  depends_on       = [kubernetes_namespace.kube-namespace]
+  depends_on       = [kubernetes_namespace.prometheus_namespace]
   name             = "prometheus"
   repository       = "https://prometheus-community.github.io/helm-charts"
   chart            = "kube-prometheus-stack"
