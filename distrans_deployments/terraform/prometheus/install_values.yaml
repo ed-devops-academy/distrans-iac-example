@@ -9,6 +9,15 @@ prometheus:
   service:
     type: LoadBalancer
 
+  additionalPodMonitors:
+    - name: distrans-pod-metrics
+      namespaceSelector:
+        matchNames:
+          - distrans
+      podMetricsEndpoints:
+        - path: /metrics
+          port: http
+
 grafana:
   service:
     type: LoadBalancer
