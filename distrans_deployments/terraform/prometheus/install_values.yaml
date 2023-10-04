@@ -4,3 +4,11 @@ podSecurityPolicy:
 server:
   persistentVolume:
     enabled: true
+
+prometheus:
+  service:
+    type: LoadBalancer
+
+grafana:
+  service:
+    type: LoadBalancer
