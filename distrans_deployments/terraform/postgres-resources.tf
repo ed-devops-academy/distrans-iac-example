@@ -72,7 +72,7 @@ resource "azurerm_postgresql_flexible_server" "postgres_server" {
   private_dns_zone_id    = azurerm_private_dns_zone.postgres_dns_zone.id
   administrator_login    = var.postgres_server_administrator_login
   administrator_password = var.postgres_server_administrator_password
-  zone                   = "1"
+  # zone                   = "1"
   storage_mb             = 32768
   sku_name               = "GP_Standard_D2s_v3"
   backup_retention_days  = 7
