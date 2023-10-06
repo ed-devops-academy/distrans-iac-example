@@ -14,6 +14,9 @@ prometheus:
       namespaceSelector:
         matchNames:
           - distrans
+      selector:
+        matchLabels:
+          app: distrans
       podMetricsEndpoints:
         - path: /metrics
           port: http
