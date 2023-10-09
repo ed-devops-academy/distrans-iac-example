@@ -148,15 +148,19 @@ resource "random_pet" "prefix" {
   length = 1
 }
 
-data "template_file" "install_agent" {
-  template = file("install_agent.ps1")
+data "template_file" "setups" {
+  template = file("./wind10_server_scripts/setups.ps1")
   vars = {
-    RepoPAT = var.azure_repo_pat
+    RepoPAT       = var.azure_repo_pat,
+    ServerName    = var.app_vm_hostname,
+    InstallerPath = var.app_vm_prometheus_exporter_installer_url,
+    Collectors    = var.app_vm_prometheus_collectors
+    FirewallIP    = azurerm_windows_virtual_machine.app_vm.public_ip_address
   }
 }
 
-resource "azurerm_virtual_machine_extension" "app_vm_web_agent_install" {
-  name                       = "${random_pet.prefix.id}-ag-iis-wsi"
+resource "azurerm_virtual_machine_extension" "app_vm_web_setups" {
+  name                       = "${random_pet.prefix.id}-setups"
   virtual_machine_id         = azurerm_windows_virtual_machine.app_vm.id
   publisher                  = "Microsoft.Compute"
   type                       = "CustomScriptExtension"
@@ -165,7 +169,7 @@ resource "azurerm_virtual_machine_extension" "app_vm_web_agent_install" {
 
   settings = <<SETTINGS
   {    
-    "commandToExecute": "powershell -command \"[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64encode(data.template_file.install_agent.rendered)}')) | Out-File -filepath install_agent.ps1\" && powershell -ExecutionPolicy Unrestricted -File install_agent.ps1 -RepoPAT ${var.azure_repo_pat}}" 
+    "commandToExecute": "powershell -command \"[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64encode(data.template_file.setups.rendered)}')) | Out-File -filepath setups.ps1\" && powershell -ExecutionPolicy Unrestricted -File setups.ps1 -RepoPAT ${var.azure_repo_pat} -ServerName ${var.app_vm_hostname} -InstallerPath ${var.app_vm_prometheus_exporter_installer_url} -Collectors ${var.app_vm_prometheus_collectors} -FirewallIP ${azurerm_windows_virtual_machine.app_vm.public_ip_address}}" 
   }
   
   SETTINGS

@@ -76,6 +76,18 @@ variable "app_vm_username" {
   description = "Username of the virtual machine agent resource."
 }
 
+variable "app_vm_prometheus_exporter_installer_url" {
+  type        = string
+  default     = "https://github.com/prometheus-community/windows_exporter/releases/download/v0.24.0/windows_exporter-0.24.0-amd64.msi"
+  description = "URL of the msi installer for prometheus windows exporter to install on the app machine."
+}
+
+variable "app_vm_prometheus_collectors" {
+  type        = string
+  default     = "cpu,cs,logical_disk,net,os,service,system,textfile,memory,iis"
+  description = "Collectors to enable on prometheus windows exporter on app virtual machine."
+}
+
 variable "azure_repo_pat" {
   type        = string
   default     = "IntroduceRepoPATPlease"

@@ -9,17 +9,23 @@ prometheus:
   service:
     type: LoadBalancer
 
-  additionalPodMonitors:
-    - name: distrans-pod-metrics
-      namespaceSelector:
-        matchNames:
-          - distrans
-      selector:
-        matchLabels:
-          app: distrans
-      podMetricsEndpoints:
-        - path: /metrics
-          port: http
+  # additionalPodMonitors:
+  #   - name: distrans-pod-metrics
+  #     namespaceSelector:
+  #       matchNames:
+  #         - distrans
+  #     selector:
+  #       matchLabels:
+  #         app: distrans
+  #     podMetricsEndpoints:
+  #       - path: /metrics
+  #         port: http
+
+  prometheusSpec:
+    additionalScrapeConfigs: |
+      - job_name: "superCheap_app_windows_server"
+      static_configs:
+      - targets: ["${ws_public_ip}:9182"]
 
 grafana:
   service:
