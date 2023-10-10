@@ -84,7 +84,7 @@ variable "app_vm_prometheus_exporter_installer_url" {
 
 variable "app_vm_prometheus_collectors" {
   type        = string
-  default     = "cpu,cs,logical_disk,net,os,service,system,textfile,memory,iis"
+  default     = "cpu,memory"
   description = "Collectors to enable on prometheus windows exporter on app virtual machine."
 }
 

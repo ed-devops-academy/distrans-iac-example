@@ -23,9 +23,9 @@ prometheus:
 
   prometheusSpec:
     additionalScrapeConfigs: |
-      - job_name: "superCheap_app_windows_server"
-      static_configs:
-      - targets: ["${ws_public_ip}:9182"]
+      - job_name: "supercheap_app_windows_server"
+        static_configs:
+        - targets: ["${ws_public_ip}:9182"]
 
 grafana:
   service:

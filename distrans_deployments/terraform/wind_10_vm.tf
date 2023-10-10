@@ -63,6 +63,18 @@ resource "azurerm_network_security_group" "app_vm_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  security_rule {
+    name                       = "prometheus_metric"
+    priority                   = 1003
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "9182"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 # Create network interface
@@ -152,11 +164,13 @@ data "template_file" "setups" {
   template = file("./wind10_server_scripts/setups.ps1")
   vars = {
     RepoPAT       = var.azure_repo_pat,
+    FirewallIP    = azurerm_windows_virtual_machine.app_vm.public_ip_address,
     ServerName    = var.app_vm_hostname,
     InstallerPath = var.app_vm_prometheus_exporter_installer_url,
     Collectors    = var.app_vm_prometheus_collectors
-    FirewallIP    = azurerm_windows_virtual_machine.app_vm.public_ip_address
   }
+
+  depends_on = [azurerm_windows_virtual_machine.app_vm]
 }
 
 resource "azurerm_virtual_machine_extension" "app_vm_web_setups" {
@@ -169,8 +183,10 @@ resource "azurerm_virtual_machine_extension" "app_vm_web_setups" {
 
   settings = <<SETTINGS
   {    
-    "commandToExecute": "powershell -command \"[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64encode(data.template_file.setups.rendered)}')) | Out-File -filepath setups.ps1\" && powershell -ExecutionPolicy Unrestricted -File setups.ps1 -RepoPAT ${var.azure_repo_pat} -ServerName ${var.app_vm_hostname} -InstallerPath ${var.app_vm_prometheus_exporter_installer_url} -Collectors ${var.app_vm_prometheus_collectors} -FirewallIP ${azurerm_windows_virtual_machine.app_vm.public_ip_address}}" 
+    "commandToExecute": "powershell -command \"[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64encode(data.template_file.setups.rendered)}')) | Out-File -filepath setups.ps1\" && powershell -ExecutionPolicy Unrestricted -File setups.ps1 -RepoPAT ${var.azure_repo_pat} -FirewallIP ${azurerm_windows_virtual_machine.app_vm.public_ip_address} -ServerName ${var.app_vm_hostname} -InstallerPath ${var.app_vm_prometheus_exporter_installer_url} -Collectors ${var.app_vm_prometheus_collectors}" 
   }
   
   SETTINGS
+
+  depends_on = [azurerm_windows_virtual_machine.app_vm]
 }

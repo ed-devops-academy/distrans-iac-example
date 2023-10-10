@@ -9,6 +9,10 @@ param
     [string]$Collectors = "cpu,cs,logical_disk,net,os,service,system,textfile,memory,iis,mssql,exchange"
 )
 
+# clean params
+# $PatFormatted = $RepoPAT.Trim("}")
+# $CollectorsFormatted = $Collectors.
+
 #################################################################################
 ##################### Azure agent installation and setup ########################
 #################################################################################
@@ -52,13 +56,11 @@ if($DefaultProxy -and (-not $DefaultProxy.IsBypassed($Uri))){
     $WebClient.Proxy= New-Object Net.WebProxy($DefaultProxy.GetProxy($Uri).OriginalString, $True)
 }
 
-$PatFormatted = $RepoPAT.Trim("}") 
-
 $WebClient.DownloadFile($Uri, $agentZip)
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 [System.IO.Compression.ZipFile]::ExtractToDirectory( $agentZip, "$PWD")
-[System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_TOKEN',"$PatFormatted")
-.\config.cmd --deploymentgroup --deploymentgroupname "Production" --agent $env:COMPUTERNAME --runasservice --work '_work' --url 'https://dev.azure.com/musalaDevOpsAcademy/' --unattended --projectname 'SuperCheap Application' --replace --auth PAT --token $PatFormatted
+[System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_TOKEN',"$RepoPAT")
+.\config.cmd --deploymentgroup --deploymentgroupname "Production" --agent $env:COMPUTERNAME --runasservice --work '_work' --url 'https://dev.azure.com/musalaDevOpsAcademy/' --unattended --projectname 'SuperCheap Application' --replace --auth PAT --token $RepoPAT
 Remove-Item $agentZip
 
 Write-Host "Finnished installation and setup of azure agent"
@@ -67,6 +69,14 @@ Write-Host "Finnished installation and setup of azure agent"
 ############## Installation and setup of prometheus exporter ####################
 #################################################################################
 Write-Host "Starting installation and setup of prometheus exporter"
+
+$env:HostIP = (
+    Get-NetIPConfiguration |
+    Where-Object {
+        $_.IPv4DefaultGateway -ne $null -and
+        $_.NetAdapter.Status -ne "Disconnected"
+    }
+).IPv4Address.IPAddress
 
 # Get installer filename from path
 $InstallerFilename = Split-Path -Path $InstallerPath -Leaf;
@@ -87,10 +97,10 @@ Start-Process -FilePath msiexec.exe -ArgumentList $ArgStmt -Verb RunAs -Wait;
 Remove-Item -Path "c:\Temp\$InstallerFilename" -Force;
 
 # Scope exporter firewall rule to Prometheus server IP
-Get-NetFirewallRule -DisplayName 'windows_exporter (HTTP )' | Get-NetFirewallAddressFilter | Set-NetFirewallAddressFilter -RemoteAddress $FirewallIP;
+Get-NetFirewallRule -DisplayName 'windows_exporter (HTTP )' | Get-NetFirewallAddressFilter | Set-NetFirewallAddressFilter -RemoteAddress Any;
     
 # Modify exporter service to reset fail count after 1 day and restart service after 5 minutes to allow for server patching reboots
-# Start-Process -FilePath sc.exe -ArgumentList "\\$ServerName failure windows_exporter reset=86400 actions=restart/300000" -Verb RunAs -Wait;
+Start-Process -FilePath sc.exe -ArgumentList "\\$ServerName failure windows_exporter reset=86400 actions=restart/300000" -Verb RunAs -Wait;
 
 
 Write-Host "Finnished installation and setup of prometheus exporter"
