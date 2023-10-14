@@ -30,3 +30,22 @@ prometheus:
 grafana:
   service:
     type: LoadBalancer
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      folder: /tmp/dashboards
+
+      ## Annotations for Grafana dashboard configmaps
+      ##
+      annotations: 
+        k8s-sidecar-target-directory: "/tmp/dashboards/distrans"
+      multicluster:
+        global:
+          enabled: false
+        etcd:
+          enabled: false
+      provider:
+        allowUiUpdates: false
+        foldersFromFilesStructure: true
