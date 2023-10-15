@@ -17,6 +17,33 @@ resource "helm_release" "prometheus" {
   timeout          = 2000
 }
 
+data "external" "prometheus_source_public_ip" {
+  program = ["bash", "./prometheus/get_pro_service_ip.sh"]
+
+  depends_on = [helm_release.prometheus]
+}
+
+resource "kubernetes_secret_v1" "grafana-datasource-distrans" {
+  metadata {
+    name      = "grafana-datasource-distrans"
+    namespace = kubernetes_namespace.prometheus_namespace.id
+
+    labels = {
+      grafana_datasource = "1"
+    }
+
+    annotations = {
+      k8s-sidecar-target-directory = "/tmp/datasources/distrans"
+    }
+  }
+
+  data = {
+    "distrans-prometheus-datasource.yaml" = templatefile("./prometheus/grafana_datasource.yaml", { promethues_loadbalancer_ip = "${data.external.prometheus_source_public_ip.result.ip}" })
+  }
+
+  depends_on = [helm_release.prometheus, data.external.prometheus_source_public_ip]
+}
+
 resource "kubernetes_config_map" "grafana-dashboards-distrans" {
   metadata {
     name      = "grafana-dashboard-distrans"

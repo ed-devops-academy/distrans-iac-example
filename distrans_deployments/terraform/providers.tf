@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 2.26"
+      version = "3.46.0"
     }
 
     template = {
@@ -14,12 +14,12 @@ terraform {
 
     random = {
       source  = "hashicorp/random"
-      version = "~>3.0"
+      version = "3.4.3"
     }
 
     tls = {
       source  = "hashicorp/tls"
-      version = "~>4.0"
+      version = "4.0.4"
     }
 
     kubectl = {
@@ -34,7 +34,12 @@ terraform {
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.0.0"
+      version = "2.23.0"
+    }
+
+    external = {
+      source = "hashicorp/external"
+      version = "2.3.1"
     }
   }
 }
