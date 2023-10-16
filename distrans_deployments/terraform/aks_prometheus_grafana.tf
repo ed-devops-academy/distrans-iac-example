@@ -20,20 +20,20 @@ resource "helm_release" "prometheus" {
 data "external" "prometheus_source_public_ip" {
   program = ["bash", "./prometheus/get_pro_service_ip.sh"]
 
+  query = {
+    kube_config = "${azurerm_kubernetes_cluster.aks_cluster.kube_config_raw}"
+  }
+
   depends_on = [helm_release.prometheus]
 }
 
-resource "kubernetes_secret_v1" "grafana-datasource-distrans" {
+resource "kubernetes_config_map" "grafana-datasource-distrans" {
   metadata {
     name      = "grafana-datasource-distrans"
     namespace = kubernetes_namespace.prometheus_namespace.id
 
     labels = {
       grafana_datasource = "1"
-    }
-
-    annotations = {
-      k8s-sidecar-target-directory = "/tmp/datasources/distrans"
     }
   }
 

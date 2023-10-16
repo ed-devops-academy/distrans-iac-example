@@ -1,6 +1,6 @@
 apiVersion: 1
 datasources:
-  - name: Promethues Distrans Datasource
+  - name: Promethues_Distrans_Datasource
     type: prometheus
-    url: ${promethues_loadbalancer_ip}:9090
+    url: http://${promethues_loadbalancer_ip}:9090
     isDefault: true
