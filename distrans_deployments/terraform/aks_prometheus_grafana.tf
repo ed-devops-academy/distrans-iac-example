@@ -13,8 +13,12 @@ resource "helm_release" "prometheus" {
   namespace        = kubernetes_namespace.prometheus_namespace.id
   create_namespace = true
   version          = "51.2.0"
-  values           = [templatefile("./prometheus/install_values.yaml", { ws_public_ip = azurerm_windows_virtual_machine.app_vm.public_ip_address })]
-  timeout          = 2000
+  values = [templatefile("./prometheus/install_values.yaml", {
+    ws_public_ip         = azurerm_windows_virtual_machine.app_vm.public_ip_address,
+    prometheus_namespace = var.aks_prometheus_namespace
+  })]
+
+  timeout = 2000
 }
 
 data "external" "prometheus_source_public_ip" {
@@ -38,7 +42,9 @@ resource "kubernetes_config_map" "grafana-datasource-distrans" {
   }
 
   data = {
-    "distrans-prometheus-datasource.yaml" = templatefile("./prometheus/grafana_datasource.yaml", { promethues_loadbalancer_ip = "${data.external.prometheus_source_public_ip.result.ip}" })
+    "distrans-prometheus-datasource.yaml" = templatefile("./prometheus/grafana_datasource.yaml", {
+      promethues_loadbalancer_ip = "${data.external.prometheus_source_public_ip.result.ip}"
+    })
   }
 
   depends_on = [helm_release.prometheus, data.external.prometheus_source_public_ip]

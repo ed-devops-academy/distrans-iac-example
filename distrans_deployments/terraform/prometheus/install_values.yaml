@@ -35,6 +35,9 @@ grafana:
       enabled: true
       label: grafana_datasource
       labelValue: "1"
+      skipReload: false
+      reloadURL: http://prometheus-grafana.${prometheus_namespace}.svc.cluster.local/api/admin/provisioning/datasources/reload
+
 
     dashboards:
       enabled: true

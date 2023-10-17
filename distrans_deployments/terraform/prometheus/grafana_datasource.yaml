@@ -3,4 +3,5 @@ datasources:
   - name: Promethues_Distrans_Datasource
     type: prometheus
     url: http://${promethues_loadbalancer_ip}:9090
-    isDefault: true
+    access: proxy
+    basicAuth: false

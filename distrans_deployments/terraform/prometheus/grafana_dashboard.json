@@ -1,4 +1,15 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS_ID",
+      "label": "Prometheus Data Source",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+
   "annotations": {
     "list": [
       {
@@ -36,10 +47,7 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-      },
+      "datasource": "Promethues_Distrans_Datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -85,10 +93,7 @@
       "pluginVersion": "10.1.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-          },
+          "datasource": "Promethues_Distrans_Datasource",
           "editorMode": "code",
           "expr": "100 - (100 * sum by (instance) (irate(windows_cpu_time_total{job=\"supercheap_app_windows_server\", mode=\"idle\"}[1m]))/sum by (instance) (irate(windows_cpu_time_total{job=\"supercheap_app_windows_server\"}[1m])))",
           "instant": false,
@@ -101,10 +106,7 @@
       "type": "gauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-      },
+      "datasource": "Promethues_Distrans_Datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -150,10 +152,7 @@
       "pluginVersion": "10.1.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-          },
+          "datasource": "Promethues_Distrans_Datasource",
           "editorMode": "code",
           "expr": "round(100 - (100 * (windows_memory_available_bytes{job=\"supercheap_app_windows_server\"})/(3.5 * 1000000000)), 0.01)",
           "instant": false,
@@ -166,10 +165,7 @@
       "type": "gauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-      },
+      "datasource": "Promethues_Distrans_Datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -217,10 +213,7 @@
       "pluginVersion": "10.1.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-          },
+          "datasource": "Promethues_Distrans_Datasource",
           "editorMode": "code",
           "expr": "round(windows_memory_available_bytes{job=\"supercheap_app_windows_server\"}/1000000, 0.01)",
           "instant": false,
@@ -246,10 +239,7 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-      },
+      "datasource": "Promethues_Distrans_Datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -296,10 +286,7 @@
       "pluginVersion": "10.1.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-          },
+          "datasource": "Promethues_Distrans_Datasource",
           "editorMode": "code",
           "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"${namespace}\", pod=~\"${pod}.*\"}[5m])) / sum(kube_pod_container_resource_limits{namespace=\"${namespace}\", resource=\"cpu\", pod=~\"${pod}.*\"})  * 100",
           "instant": false,
@@ -312,10 +299,7 @@
       "type": "gauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-      },
+      "datasource": "Promethues_Distrans_Datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -362,10 +346,7 @@
       "pluginVersion": "10.1.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-          },
+          "datasource": "Promethues_Distrans_Datasource",
           "editorMode": "code",
           "expr": "round(max by (pod)(max_over_time(container_memory_usage_bytes{namespace=\"${namespace}\"}[1m]))/ on (pod) (kube_pod_container_resource_limits{namespace=\"${namespace}\", resource=\"memory\", pod=~\"${pod}.*\"}) * 100, 0.01)",
           "instant": false,
@@ -378,10 +359,7 @@
       "type": "gauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-      },
+      "datasource": "Promethues_Distrans_Datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -426,10 +404,7 @@
       "pluginVersion": "10.1.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-          },
+          "datasource": "Promethues_Distrans_Datasource",
           "editorMode": "code",
           "expr": "round(max (max_over_time(container_memory_usage_bytes{namespace=\"${namespace}\", pod=~\"${pod}.*\"}[1m])) / 1000000, 0.01)",
           "instant": false,
@@ -454,10 +429,7 @@
           "text": "transaction-server",
           "value": "transaction-server"
         },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "d9b63af4-c15d-47a7-be1e-e951d3f12a62"
-        },
+        "datasource": "Promethues_Distrans_Datasource",
         "definition": "label_values(pod)",
         "description": "(discovery-server|transaction-server|account-service|order-service|product-service).*",
         "hide": 0,
