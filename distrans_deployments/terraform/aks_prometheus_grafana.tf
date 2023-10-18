@@ -70,3 +70,20 @@ resource "kubernetes_config_map" "grafana-dashboards-distrans" {
 
   depends_on = [helm_release.prometheus]
 }
+
+resource "kubernetes_config_map" "grafana-contact-points-distrans" {
+  metadata {
+    name      = "grafana-contact-points-distrans"
+    namespace = kubernetes_namespace.prometheus_namespace.id
+
+    labels = {
+      grafana_notifier = "1"
+    }
+  }
+
+  data = {
+    "distrans-prometheus-notifiers.yaml" = templatefile("./prometheus/grafana_contact_points.yaml", {})
+  }
+
+  depends_on = [helm_release.prometheus]
+}

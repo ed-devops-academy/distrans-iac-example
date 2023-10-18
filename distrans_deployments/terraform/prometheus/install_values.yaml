@@ -57,3 +57,17 @@ grafana:
       provider:
         allowUiUpdates: false
         foldersFromFilesStructure: true
+    
+    alerts:
+      enabled: true
+      label: grafana_alert
+      labelValue: "1"
+      skipReload: false
+      reloadURL: http://prometheus-grafana.${prometheus_namespace}.svc.cluster.local/api/admin/provisioning/alerting/reload
+
+    notifiers:
+      enabled: true
+      label: grafana_notifier
+      labelValue: "1"
+      skipReload: false
+      reloadURL: http://prometheus-grafana.${prometheus_namespace}.svc.cluster.local/api/admin/provisioning/notifications/reload
