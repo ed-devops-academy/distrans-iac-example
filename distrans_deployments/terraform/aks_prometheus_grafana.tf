@@ -77,13 +77,64 @@ resource "kubernetes_config_map" "grafana-contact-points-distrans" {
     namespace = kubernetes_namespace.prometheus_namespace.id
 
     labels = {
-      grafana_notifier = "1"
+      grafana_alert = "1"
     }
   }
 
   data = {
-    "distrans-prometheus-notifiers.yaml" = templatefile("./prometheus/grafana_contact_points.yaml", {})
+    "distrans-contact-points.yaml" = templatefile("./prometheus/grafana_contact_points.yaml", {})
   }
 
   depends_on = [helm_release.prometheus]
+}
+
+resource "kubernetes_config_map" "grafana-notifictions-policies-distrans" {
+  metadata {
+    name      = "grafana-notifictions-policies-distrans"
+    namespace = kubernetes_namespace.prometheus_namespace.id
+
+    labels = {
+      grafana_alert = "1"
+    }
+  }
+
+  data = {
+    "distrans-notifictions-policies.yaml" = templatefile("./prometheus/grafana_notifications_policies.yaml", {})
+  }
+
+  depends_on = [helm_release.prometheus, kubernetes_config_map.grafana-contact-points-distrans]
+}
+
+resource "kubernetes_config_map" "grafana-alert-win-mem-85-distrans" {
+  metadata {
+    name      = "grafana-alert-win-mem-85-distrans"
+    namespace = kubernetes_namespace.prometheus_namespace.id
+
+    labels = {
+      grafana_alert = "1"
+    }
+  }
+
+  data = {
+    "distrans-alert-win-mem-85.yaml" = templatefile("./prometheus/alert-rule-wind-mem-85.yaml", {})
+  }
+
+  depends_on = [helm_release.prometheus, kubernetes_config_map.grafana-datasource-distrans]
+}
+
+resource "kubernetes_config_map" "grafana-alert-win-cpu-85-distrans" {
+  metadata {
+    name      = "grafana-alert-win-cpu-85-distrans"
+    namespace = kubernetes_namespace.prometheus_namespace.id
+
+    labels = {
+      grafana_alert = "1"
+    }
+  }
+
+  data = {
+    "distrans-alert-cpu-mem-85.yaml" = templatefile("./prometheus/alert-rule-wind-cpu-85.yaml", {})
+  }
+
+  depends_on = [helm_release.prometheus, kubernetes_config_map.grafana-datasource-distrans]
 }

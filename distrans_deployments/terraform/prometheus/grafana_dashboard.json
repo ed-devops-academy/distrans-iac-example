@@ -1,15 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS_ID",
-      "label": "Prometheus Data Source",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-
   "annotations": {
     "list": [
       {
@@ -29,7 +18,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 28,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -43,7 +31,7 @@
       },
       "id": 6,
       "panels": [],
-      "title": "WIndows Server Metrics",
+      "title": "Windows Server Metrics",
       "type": "row"
     },
     {
@@ -222,7 +210,7 @@
           "refId": "A"
         }
       ],
-      "title": "Panel Title",
+      "title": "Memory Usage",
       "type": "stat"
     },
     {
@@ -237,6 +225,182 @@
       "panels": [],
       "title": "PODs Metrics",
       "type": "row"
+    },
+    {
+      "datasource": "Promethues_Distrans_Datasource",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 0,
+        "y": 7
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "Promethues_Distrans_Datasource",
+          "editorMode": "code",
+          "expr": "sum by (pod)(rate(container_cpu_usage_seconds_total{namespace=\"${namespace}\"}[5m])) / sum by (pod)(kube_pod_container_resource_limits{namespace=\"${namespace}\", resource=\"cpu\"})  * 100",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Pods General CPU % Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Promethues_Distrans_Datasource",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 9,
+        "y": 7
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "Promethues_Distrans_Datasource",
+          "editorMode": "code",
+          "expr": "round(max by (pod)(max_over_time(container_memory_usage_bytes{namespace=\"${namespace}\"}[1m]))/ on (pod) (kube_pod_container_resource_limits{namespace=\"${namespace}\", resource=\"memory\"}) * 100, 0.01)",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "PODs General Memory % Usage",
+      "type": "timeseries"
     },
     {
       "datasource": "Promethues_Distrans_Datasource",
@@ -267,7 +431,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 7
+        "y": 15
       },
       "id": 1,
       "options": {
@@ -328,7 +492,7 @@
         "h": 5,
         "w": 4,
         "x": 4,
-        "y": 7
+        "y": 15
       },
       "id": 2,
       "options": {
@@ -384,7 +548,7 @@
         "h": 5,
         "w": 6,
         "x": 8,
-        "y": 7
+        "y": 15
       },
       "id": 5,
       "options": {
@@ -425,9 +589,10 @@
     "list": [
       {
         "current": {
+          "isNone": true,
           "selected": true,
-          "text": "transaction-server",
-          "value": "transaction-server"
+          "text": "None",
+          "value": ""
         },
         "datasource": "Promethues_Distrans_Datasource",
         "definition": "label_values(pod)",
@@ -481,6 +646,6 @@
   "timezone": "",
   "title": "Distrans",
   "uid": "f0a50852-a4ad-40d6-a595-7721ec2ccdbe",
-  "version": 6,
+  "version": 1,
   "weekStart": ""
 }

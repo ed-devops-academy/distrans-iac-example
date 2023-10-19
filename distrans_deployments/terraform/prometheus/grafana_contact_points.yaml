@@ -1,9 +1,9 @@
 apiVersion: 1
 contactPoints:
   - name: teams-distrans-notification-channel
-    org_id: 1
+    orgId: 1
     receivers:
-      type: teams
-      uid: teamsdistrans
-      settings:
-        url: https://musalasoft.webhook.office.com/webhookb2/735139b9-ecf8-4b26-af43-43fe5c622a82@044035e6-7718-4c26-8e72-6fa43405b771/IncomingWebhook/9dacea2abdc144d8a453ef673dac6214/696dd151-d951-46a6-8d11-39187af3db4a
+      - type: teams
+        uid: teamsdistrans
+        settings:
+          url: https://musalasoft.webhook.office.com/webhookb2/735139b9-ecf8-4b26-af43-43fe5c622a82@044035e6-7718-4c26-8e72-6fa43405b771/IncomingWebhook/9dacea2abdc144d8a453ef673dac6214/696dd151-d951-46a6-8d11-39187af3db4a

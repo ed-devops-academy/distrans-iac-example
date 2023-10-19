@@ -1,0 +1,88 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: eval_1m
+      folder: distrans
+      interval: 1m
+      rules:
+        - uid: cd3b6ce2-a507-4add-aa86-e36aeb9baa3b
+          title: distrans-windows-memory-high-85
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: P67922E13F14564F3
+              model:
+                datasource:
+                    type: prometheus
+                    uid: P67922E13F14564F3
+                editorMode: code
+                expr: round(100 - (100 * (windows_memory_available_bytes{job="supercheap_app_windows_server"})/(3.5 * 1000000000)), 0.01)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: B
+                type: reduce
+            - refId: C
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 85
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: B
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          isPaused: false
