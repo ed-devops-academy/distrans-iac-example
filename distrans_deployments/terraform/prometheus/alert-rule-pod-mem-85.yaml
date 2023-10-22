@@ -5,8 +5,8 @@ groups:
       folder: distrans
       interval: 1m
       rules:
-        - uid: cd3b6ce2-a507-4add-aa86-e36aeb9baa3a
-          title: distrans-windows-cpu-high-85
+        - uid: cd3b6ce2-a507-4add-aa86-e36aeb9baa3e
+          title: distrans-pods-mem-high-85
           condition: C
           data:
             - refId: A
@@ -17,7 +17,7 @@ groups:
               model:
                 datasource: "Promethues_Distrans_Datasource"
                 editorMode: code
-                expr: 100 - (100 * sum by (instance) (irate(windows_cpu_time_total{job="supercheap_app_windows_server", mode="idle"}[1m]))/sum by (instance) (irate(windows_cpu_time_total{job="supercheap_app_windows_server"}[1m])))
+                expr: round(max by (pod)(max_over_time(container_memory_usage_bytes{namespace="${namespace}"}[1m]))/ on (pod) (kube_pod_container_resource_limits{namespace="${namespace}", resource="memory"}) * 100, 0.01)
                 instant: true
                 intervalMs: 1000
                 legendFormat: __auto
