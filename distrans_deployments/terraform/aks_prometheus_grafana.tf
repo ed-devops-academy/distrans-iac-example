@@ -150,7 +150,9 @@ resource "kubernetes_config_map" "grafana-alert-pod-cpu-85-distrans" {
   }
 
   data = {
-    "distrans-alert-pod-cpu-85.yaml" = file("./prometheus/alert-rule-pod-cpu-85.yaml")
+    "distrans-alert-pod-cpu-85.yaml" = templatefile("./prometheus/alert-rule-pod-cpu-85.yaml", {
+      namespace = var.aks_namespace
+    })
   }
 
   depends_on = [helm_release.prometheus, kubernetes_config_map.grafana-datasource-distrans]
@@ -167,7 +169,9 @@ resource "kubernetes_config_map" "grafana-alert-pod-mem-85-distrans" {
   }
 
   data = {
-    "distrans-alert-pod-mem-85.yaml" = file("./prometheus/alert-rule-pod-mem-85.yaml")
+    "distrans-alert-pod-mem-85.yaml" = templatefile("./prometheus/alert-rule-pod-mem-85.yaml", {
+      namespace = var.aks_namespace
+    })
   }
 
   depends_on = [helm_release.prometheus, kubernetes_config_map.grafana-datasource-distrans]
